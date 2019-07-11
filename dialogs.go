@@ -1,4 +1,4 @@
-package file_picker_multi
+package file_picker
 
 import "github.com/gen2brain/dlgs"
 
@@ -11,4 +11,3 @@ type dialogProvider struct {}
 func (dialog dialogProvider) File(title string, filter string, directory bool) (string, bool, error) {
 	return dlgs.File(title, filter, directory)
 }
-
