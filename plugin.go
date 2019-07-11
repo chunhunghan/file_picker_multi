@@ -47,6 +47,7 @@ func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool) func(argu
 				return nil, errors.Wrap(err, "failed to open dialog picker")
 			}
 
+			//type []string is not supported by StandardMessageCodec
 			sliceFileDescriptors := make([]interface{}, len(fileDescriptors))
 			for i, file := range fileDescriptors {
 				sliceFileDescriptors[i] = file
