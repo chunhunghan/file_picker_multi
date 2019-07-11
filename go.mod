@@ -1,4 +1,4 @@
-module github.com/chunhunghan/file_picker
+module github.com/chunhunghan/file_picker_multi
 
 go 1.12
 
