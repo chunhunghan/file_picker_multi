@@ -28,34 +28,11 @@ func (p *FilePickerPlugin) InitPlugin(messenger plugin.BinaryMessenger) error {
 
 func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool) func(arguments interface{}) (reply interface{}, err error) {
 	return func(arguments interface{}) (reply interface{}, err error) {
-		var multipleSelection = false
-
-		switch arguments.(type) {
-		case bool:
-			multipleSelection = arguments.(bool)
+		fileDescriptor, _, err := dialog.File("select file", "*", isDirectory)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to open dialog picker")
 		}
 
-		switch multipleSelection {
-		case false:
-			fileDescriptor, _, err := dialog.File("select file", "*", isDirectory)
-			if err != nil {
-				return nil, errors.Wrap(err, "failed to open dialog picker")
-			}
-			return fileDescriptor, nil
-
-		case true:
-			fileDescriptors, _, err := dialog.FileMulti("select files", "*")
-			if err != nil {
-				return nil, errors.Wrap(err, "failed to open dialog picker")
-			}
-			return fileDescriptors, nil
-		default:
-			fileDescriptor, _, err := dialog.File("select file", "*", isDirectory)
-			if err != nil {
-				return nil, errors.Wrap(err, "failed to open dialog picker")
-			}
-			return fileDescriptor, nil
-		}
-
+		return fileDescriptor, nil
 	}
 }
