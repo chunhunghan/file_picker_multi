@@ -1,6 +1,7 @@
 package file_picker
 
 import (
+	"fmt"
 	"github.com/go-flutter-desktop/go-flutter"
 	"github.com/go-flutter-desktop/go-flutter/plugin"
 	"github.com/pkg/errors"
@@ -28,6 +29,7 @@ func (p *FilePickerPlugin) InitPlugin(messenger plugin.BinaryMessenger) error {
 func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool) func(arguments interface{}) (reply interface{}, err error) {
 	return func(arguments interface{}) (reply interface{}, err error) {
 		argsMap := arguments.(interface{})
+		fmt.Printf("argsMap %v\n", argsMap)
 		switch argsMap.(bool) {
 		case false:
 			fileDescriptor, _, err := dialog.File("select file", "*", isDirectory)
