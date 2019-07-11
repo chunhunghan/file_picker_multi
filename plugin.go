@@ -1,6 +1,7 @@
 package file_picker
 
 import (
+	"fmt"
 	"github.com/go-flutter-desktop/go-flutter"
 	"github.com/go-flutter-desktop/go-flutter/plugin"
 	"github.com/pkg/errors"
@@ -14,7 +15,7 @@ var _ flutter.Plugin = &FilePickerPlugin{} // compile-time type check
 
 func (p *FilePickerPlugin) InitPlugin(messenger plugin.BinaryMessenger) error {
 	dialogProvider := dialogProvider{}
-
+    fmt.Println("Init Plugin")
 	channel := plugin.NewMethodChannel(messenger, channelName, plugin.StandardMethodCodec{})
 	//channel.HandleFunc("openDirectory", p.filePicker(dialogProvider, true))
 	channel.HandleFunc("ANY", p.filePicker(dialogProvider, false))
