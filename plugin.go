@@ -46,7 +46,13 @@ func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool) func(argu
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to open dialog picker")
 			}
-			return fileDescriptors, nil
+
+			sliceFileDescriptors := make([]interface{}, len(fileDescriptors))
+			for i, file := range fileDescriptors {
+				sliceFileDescriptors[i] = file
+			}
+
+			return sliceFileDescriptors, nil
 
 		default:
 			fileDescriptor, _, err := dialog.File("select file", "*", isDirectory)
