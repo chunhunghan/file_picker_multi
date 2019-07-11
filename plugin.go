@@ -28,6 +28,7 @@ func (p *FilePickerPlugin) InitPlugin(messenger plugin.BinaryMessenger) error {
 
 func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool) func(arguments interface{}) (reply interface{}, err error) {
 	return func(arguments interface{}) (reply interface{}, err error) {
+		fmt.Printf("enter")
 		argsMap := arguments.(interface{})
 		fmt.Printf("argsMap %v\n", argsMap)
 		switch argsMap.(bool) {
