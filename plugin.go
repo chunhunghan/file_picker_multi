@@ -27,7 +27,14 @@ func (p *FilePickerPlugin) InitPlugin(messenger plugin.BinaryMessenger) error {
 
 func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool) func(arguments interface{}) (reply interface{}, err error) {
 	return func(arguments interface{}) (reply interface{}, err error) {
-		switch arguments.(bool) {
+		var multipleSelection = false
+
+		switch arguments.(type) {
+		case bool:
+			multipleSelection = arguments.(bool)
+		}
+
+		switch multipleSelection {
 		case false:
 			fileDescriptor, _, err := dialog.File("select file", "*", isDirectory)
 			if err != nil {
