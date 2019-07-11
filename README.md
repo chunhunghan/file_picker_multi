@@ -1,2 +1,2 @@
 # file_picker_multi
-Allow file picker can pick multiple file
+go-flutter file_picker plugin allow user can select multiple file
