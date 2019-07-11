@@ -2,6 +2,7 @@ package file_picker_multi
 
 import (
 	"fmt"
+
 	"github.com/go-flutter-desktop/go-flutter"
 	"github.com/go-flutter-desktop/go-flutter/plugin"
 	"github.com/pkg/errors"
@@ -16,7 +17,7 @@ var _ flutter.Plugin = &FilePickerPlugin{} // compile-time type check
 func (p *FilePickerPlugin) InitPlugin(messenger plugin.BinaryMessenger) error {
 	fmt.Println("InitPlugin")
 	dialogProvider := dialogProvider{}
-    
+
 	channel := plugin.NewMethodChannel(messenger, channelName, plugin.StandardMethodCodec{})
 	//channel.HandleFunc("openDirectory", p.filePicker(dialogProvider, true))
 	channel.HandleFunc("ANY", p.filePicker(dialogProvider, false))
@@ -29,12 +30,31 @@ func (p *FilePickerPlugin) InitPlugin(messenger plugin.BinaryMessenger) error {
 
 func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool) func(arguments interface{}) (reply interface{}, err error) {
 	return func(arguments interface{}) (reply interface{}, err error) {
-		fmt.Println("filePicker")
-		fileDescriptor, _, err := dialog.File("select file", "*", isDirectory)
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to open dialog picker")
+
+		fmt.Println("file Picker")
+
+		switch arguments.(bool) {
+		case false:
+			fileDescriptor, _, err := dialog.File("select file", "*", isDirectory)
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to open dialog picker")
+			}
+			return fileDescriptor, nil
+
+		case true:
+			fileDescriptors, _, err := dialog.FileMulti("select files", "*")
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to open dialog picker")
+			}
+			return fileDescriptors, nil
+
+		default:
+			fileDescriptor, _, err := dialog.File("select file", "*", isDirectory)
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to open dialog picker")
+			}
+			return fileDescriptor, nil
 		}
 
-		return fileDescriptor, nil
 	}
 }
