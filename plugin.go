@@ -1,7 +1,6 @@
 package file_picker
 
-import (
-	"fmt"
+import (	
 	"github.com/go-flutter-desktop/go-flutter"
 	"github.com/go-flutter-desktop/go-flutter/plugin"
 	"github.com/pkg/errors"
