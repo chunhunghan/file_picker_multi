@@ -1,4 +1,4 @@
-package file_picker
+package file_picker_multi
 
 import (
 	"github.com/go-flutter-desktop/go-flutter"
