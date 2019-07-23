@@ -32,32 +32,32 @@ func (p *FilePickerPlugin) InitPlugin(messenger plugin.BinaryMessenger) error {
 }
 
 func (p *FilePickerPlugin) handleFilePicker(methodCall interface{}) (reply interface{}, err error) {
-	var fileExtension string
+	var filter string
 
 	method := methodCall.(plugin.MethodCall)
 	multipleSelection := method.Arguments.(bool)
 
 	switch method.Method {
 	case "ANY":
-		fileExtension = "*"
+		filter = "*"
 	case "IMAGE":
-		fileExtension = "*"
+		filter = "*"
 	case "AUDIO":
-		fileExtension = "*"
+		filter = "*"
 	case "VIDEO":
-		fileExtension = "*"
+		filter = "*"
 	default:
 		if strings.HasPrefix(method.Method, "__CUSTOM_") {
 			resolveType := strings.Split(method.Method, "__CUSTOM_")
-			fileExtension = resolveType[1]
-			fmt.Println("handleFilePicker fileExtension:" + fileExtension)
+			filter = resolveType[1]
+			fmt.Println("handleFilePicker fileExtension:" + filter)
 		} else {
-			fileExtension = "*"
+			filter = "*"
 		}
 	}
 
 	dialogProvider := dialogProvider{}
-	fileDescriptor, err := p.filePicker(dialogProvider, false, fileExtension, multipleSelection)
+	fileDescriptor, err := p.filePicker(dialogProvider, false, filter, multipleSelection)
 	if err != nil {
 		fmt.Println("user cancel")
 		return nil, nil
@@ -67,20 +67,20 @@ func (p *FilePickerPlugin) handleFilePicker(methodCall interface{}) (reply inter
 	return fileDescriptor, nil
 }
 
-func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool, fileExtension string, multipleSelection bool) (reply interface{}, err error) {
+func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool, filter string, multipleSelection bool) (reply interface{}, err error) {
 	fmt.Println("file Picker")
 
 	switch multipleSelection {
 	case false:
-		fmt.Println("filePicker fileExtension:" + fileExtension)
-		fileDescriptor, _, err := dialog.File("select file", fileExtension, isDirectory)
+		fmt.Println("filePicker fileExtension:" + filter)
+		fileDescriptor, _, err := dialog.File("select file", filter, isDirectory)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to open dialog picker")
 		}
 		return fileDescriptor, nil
 
 	case true:
-		fileDescriptors, _, err := dialog.FileMulti("select files", fileExtension)
+		fileDescriptors, _, err := dialog.FileMulti("select files", filter)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to open dialog picker")
 		}
@@ -94,7 +94,7 @@ func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool, fileExten
 		return sliceFileDescriptors, nil
 
 	default:
-		fileDescriptor, _, err := dialog.File("select file", fileExtension, isDirectory)
+		fileDescriptor, _, err := dialog.File("select file", filter, isDirectory)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to open dialog picker")
 		}
