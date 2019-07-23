@@ -36,10 +36,15 @@ func (p *FilePickerPlugin) fallBack(methodCall interface{}) (reply interface{}, 
 	fileExtension := resolveType[1]
 	fmt.Println("fallBack fileExtension:" + fileExtension)
 
-	dlgProvider := dialogProvider{}
-	p.filePicker(dlgProvider, false, fileExtension)
+	dialogProvider := dialogProvider{}
+	p.test()
+	p.filePicker(dialogProvider, false, fileExtension)
 	// return the randomized Method Name
 	return method.Method, nil
+}
+
+func (p *FilePickerPlugin) test() {
+	fmt.Println("test success")
 }
 
 func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool, fileExtension string) func(arguments interface{}) (reply interface{}, err error) {
