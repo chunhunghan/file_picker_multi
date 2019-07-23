@@ -2,6 +2,7 @@ package file_picker_multi
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/go-flutter-desktop/go-flutter"
 	"github.com/go-flutter-desktop/go-flutter/plugin"
@@ -20,29 +21,42 @@ func (p *FilePickerPlugin) InitPlugin(messenger plugin.BinaryMessenger) error {
 
 	channel := plugin.NewMethodChannel(messenger, channelName, plugin.StandardMethodCodec{})
 	//channel.HandleFunc("openDirectory", p.filePicker(dialogProvider, true))
-	channel.HandleFunc("ANY", p.filePicker(dialogProvider, false))
-	channel.HandleFunc("IMAGE", p.filePicker(dialogProvider, false))
-	channel.HandleFunc("AUDIO", p.filePicker(dialogProvider, false))
-	channel.HandleFunc("VIDEO", p.filePicker(dialogProvider, false))
-
+	channel.HandleFunc("ANY", p.filePicker(dialogProvider, false, "*"))
+	channel.HandleFunc("IMAGE", p.filePicker(dialogProvider, false, "*"))
+	channel.HandleFunc("AUDIO", p.filePicker(dialogProvider, false, "*"))
+	channel.HandleFunc("VIDEO", p.filePicker(dialogProvider, false, "*"))
+	channel.CatchAllHandleFunc(p.fallBack)
 	return nil
 }
 
-func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool) func(arguments interface{}) (reply interface{}, err error) {
+func (p *FilePickerPlugin) fallBack(methodCall interface{}) (reply interface{}, err error) {
+	method := methodCall.(plugin.MethodCall)
+
+	resolveType := strings.Split(method.Method, "__CUSTOM_")
+	fileExtension := resolveType[1]
+	fmt.Println("fileExtension:" + fileExtension)
+
+	dialogProvider := dialogProvider{}
+	p.filePicker(dialogProvider, false, fileExtension)
+	// return the randomized Method Name
+	return method.Method, nil
+}
+
+func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool, fileExtension string) func(arguments interface{}) (reply interface{}, err error) {
 	return func(arguments interface{}) (reply interface{}, err error) {
 
 		fmt.Println("file Picker")
 
 		switch arguments.(bool) {
 		case false:
-			fileDescriptor, _, err := dialog.File("select file", "*", isDirectory)
+			fileDescriptor, _, err := dialog.File("select file", fileExtension, isDirectory)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to open dialog picker")
 			}
 			return fileDescriptor, nil
 
 		case true:
-			fileDescriptors, _, err := dialog.FileMulti("select files", "*")
+			fileDescriptors, _, err := dialog.FileMulti("select files", fileExtension)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to open dialog picker")
 			}
@@ -56,7 +70,7 @@ func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool) func(argu
 			return sliceFileDescriptors, nil
 
 		default:
-			fileDescriptor, _, err := dialog.File("select file", "*", isDirectory)
+			fileDescriptor, _, err := dialog.File("select file", fileExtension, isDirectory)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to open dialog picker")
 			}
