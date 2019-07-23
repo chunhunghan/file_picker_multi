@@ -57,9 +57,14 @@ func (p *FilePickerPlugin) handleFilePicker(methodCall interface{}) (reply inter
 	}
 
 	dialogProvider := dialogProvider{}
-	p.filePicker(dialogProvider, false, fileExtension, multipleSelection)
+	fileDescriptor, err := p.filePicker(dialogProvider, false, fileExtension, multipleSelection)
+	if err != nil {
+		fmt.Println("user cancel")
+		return nil, nil
+	}
+
 	// return the randomized Method Name
-	return method.Method, nil
+	return fileDescriptor, nil
 }
 
 func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool, fileExtension string, multipleSelection bool) (reply interface{}, err error) {
