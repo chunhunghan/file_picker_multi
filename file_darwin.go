@@ -14,15 +14,15 @@ func fileFilter(method string) (string, error) {
 	case "ANY":
 		filter = "*"
 	case "IMAGE":
-		filter = "Images (*.jpeg,*.png,*.gif)\x00*.jpg;*.jpeg;*.png;*.gif\x00All Files (*.*)\x00*.*\x00\x00"
+		filter = `"PNG", "public.png", "JPEG", "jpg", "public.jpeg"`
 	case "AUDIO":
-		filter = "Audios (*.mp3)\x00*.mp3\x00All Files (*.*)\x00*.*\x00\x00"
+		filter = `"MP3", "public.mp3"`
 	case "VIDEO":
-		filter = "Videos (*.webm,*.wmv,*.mpeg,*.mkv,*.mp4,*.avi,*.mov,*.flv)\x00*.webm;*.wmv;*.mpeg;*.mkv;*mp4;*.avi;*.mov;*.flv\x00All Files (*.*)\x00*.*\x00\x00"
+		filter = `"MOV"`
 	default:
 		if strings.HasPrefix(method, "__CUSTOM_") {
 			resolveType := strings.Split(method, "__CUSTOM_")
-			filter = "Files (*." + resolveType[1] + ")\x00*." + resolveType[1] + "\x00All Files (*.*)\x00*.*\x00\x00"
+			filter = `"` + resolveType[1] + `"`
 			fmt.Println("handleFilePicker fileExtension:" + filter)
 		} else {
 			return "", errors.New("unknown method")
