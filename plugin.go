@@ -47,7 +47,7 @@ func (p *FilePickerPlugin) handleFilePicker(methodCall interface{}) (reply inter
 	case "VIDEO":
 		fileExtension = "*"
 	default:
-		if strings.HasPrefix("method.Method", "__CUSTOM_") {
+		if strings.HasPrefix(method.Method, "__CUSTOM_") {
 			resolveType := strings.Split(method.Method, "__CUSTOM_")
 			fileExtension = resolveType[1]
 			fmt.Println("handleFilePicker fileExtension:" + fileExtension)
