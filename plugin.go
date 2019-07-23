@@ -34,10 +34,10 @@ func (p *FilePickerPlugin) fallBack(methodCall interface{}) (reply interface{}, 
 
 	resolveType := strings.Split(method.Method, "__CUSTOM_")
 	fileExtension := resolveType[1]
-	fmt.Println("fileExtension:" + fileExtension)
+	fmt.Println("fallBack fileExtension:" + fileExtension)
 
-	dialogProvider := dialogProvider{}
-	p.filePicker(dialogProvider, false, fileExtension)
+	dlgProvider := dialogProvider{}
+	p.filePicker(dlgProvider, false, fileExtension)
 	// return the randomized Method Name
 	return method.Method, nil
 }
@@ -49,6 +49,7 @@ func (p *FilePickerPlugin) filePicker(dialog dialog, isDirectory bool, fileExten
 
 		switch arguments.(bool) {
 		case false:
+			fmt.Println("filePicker fileExtension:" + fileExtension)
 			fileDescriptor, _, err := dialog.File("select file", fileExtension, isDirectory)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to open dialog picker")
