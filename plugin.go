@@ -49,7 +49,7 @@ func (p *FilePickerPlugin) handleFilePicker(methodCall interface{}) (reply inter
 	default:
 		if strings.HasPrefix(method.Method, "__CUSTOM_") {
 			resolveType := strings.Split(method.Method, "__CUSTOM_")
-			filter = "*." + resolveType[1]
+			filter = "Files (*." + resolveType[1] + ")\x00*." + resolveType[1] + "\x00All Files (*.*)\x00*.*\x00\x00"
 			fmt.Println("handleFilePicker fileExtension:" + filter)
 		} else {
 			filter = "*"
